@@ -5,15 +5,19 @@ using UnityEngine;
 public class SceneController : MonoBehaviour
 {
     [SerializeField] private KnifeManager knifeManager;
+    [SerializeField] private UIManager uiManager;
+
+    private int score;
 
     private void Start()
     {
         knifeManager = GetComponent<KnifeManager>();
+        score = 0;
     }
 
     private void Win()
     {
-        Debug.Log("Are you winning son?");
+        Debug.Log("Win");
     }
 
     public void Lose()
@@ -24,6 +28,8 @@ public class SceneController : MonoBehaviour
 
     public void Hit()
     {
+        score++;
+        uiManager.UpdateScore(score);
         if (knifeManager.countKnife < 0)
             Win();
     }

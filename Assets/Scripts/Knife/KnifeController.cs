@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 public class KnifeController : MonoBehaviour
 {
-    [SerializeField] private SceneController sceneController;
     [SerializeField] private float radius;
-    private void FixedUpdate()
+    public SceneController sceneController;
+    private void Update()
     {
         Collider2D collider = Physics2D.OverlapCircle(transform.position, radius, Physics2D.AllLayers);
         if (collider != null)
@@ -14,16 +14,23 @@ public class KnifeController : MonoBehaviour
 
             if (layer == "Wood")
             {
-                transform.parent.GetComponent<MovementKnife>().enabled = false;
+                Disabled();
                 transform.parent.SetParent(collider.transform);
-                // Изменить rotation на 0
                 sceneController.Hit();
-                this.enabled = false;
+                transform.parent.gameObject.layer = LayerMask.NameToLayer("Knife");
             } else if (layer == "Knife")
             {
+                Disabled();
                 sceneController.Lose();
+                Destroy(transform.parent.gameObject);
             }
         }
+    }
+
+    private void Disabled()
+    {
+        transform.parent.GetComponent<MovementKnife>().enabled = false;
+        this.enabled = false;
     }
 
     private void OnDrawGizmos()
